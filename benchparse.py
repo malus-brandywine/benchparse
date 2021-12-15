@@ -79,9 +79,9 @@ def generate_and_save_plots(benchmarks_dict, outfile):
 
 def get_filename(outfile):
     prefix = 1
-    while os.path.exists(f'{outfile}/0{prefix}.txt'):
+    while os.path.exists(f'{outfile}.0{prefix}.txt'):
         prefix += 1
-    return f'{outfile}/0{prefix}'
+    return f'{outfile}.0{prefix}'
 
 if __name__ == '__main__':
     main()
