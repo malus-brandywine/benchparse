@@ -11,7 +11,8 @@ def main():
     outfile = get_filename(args.benchparse_output)
     benchmarks_dict = load_benchmarks_dict(benchmarks_requested, benchmarks_json, outfile)
     generate_and_save_summary_stats(benchmarks_dict, outfile)
-    # generate_and_save_plots(benchmarks_dict, args.benchparse_output)
+#    generate_and_save_plots(benchmarks_dict, args.benchparse_output)
+    generate_and_save_plots(benchmarks_dict, outfile)
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Parse sel4bench output')
@@ -24,6 +25,7 @@ def load_benchmarks_requested(benchreqs_infile):
     benchmarks_requested = []
     with open(benchreqs_infile, 'r') as breqs:
         benchmarks_requested = breqs.readlines()
+
     benchmarks_requested = set([line.strip().lower() for line in benchmarks_requested])
     return benchmarks_requested
 
@@ -76,6 +78,21 @@ def generate_and_save_plots(benchmarks_dict, outfile):
     plt.legend(loc='upper right')
     plt.grid()
     f.savefig(outfile + '.pdf')
+
+
+    for benchmark in benchmarks_dict:
+
+        fig, ax = plt.subplots()
+        xmin, xmax, ymin, ymax = plt.axis()
+        plt.title('Histogram for "' + benchmark +'"')
+        plt.ylabel('# of occurances')
+        plt.xlabel('Clock Cycles')
+        plt.grid()
+
+        ax.hist(benchmarks_dict[benchmark][0]['Raw results'], bins = 300 )
+
+        fig.savefig(outfile + '.' + benchmark + '.pdf')
+
 
 def get_filename(outfile):
     prefix = 1
